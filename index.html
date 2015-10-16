@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="weatherChart">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather Chart</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+    <style>
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+            display: none !important;
+        }
+    </style>
+</head>
+<body ng-cloak>
+    <nav class="navbar navbar-inverse navbar-static-top">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Weather Chart</a>
+        </div>
+    </nav>
+
+    <weather-low-barrel></weather-low-barrel>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/lowBarrel-directive.js"></script>
+</body>
+</html>
