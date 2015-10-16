@@ -1,7 +1,7 @@
 ﻿(function () {
   'use strict';
 
-  angular.module('imdb.barChart', [])
+  angular.module('lowBarrel.graph', [])
     .directive('weatherLowBarrel', function () {
       return {
         restrict: 'E',

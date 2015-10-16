@@ -1,6 +1,6 @@
 (function () {
   'use strict';
 
-  angular.module('weatherChart', []);
+  angular.module('lowBarrel', ['lowBarrel.service', 'lowBarrel.weatherController', 'lowBarrel.graph']);
 
 }());

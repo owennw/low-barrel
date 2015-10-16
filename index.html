@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="weatherChart">
+<html lang="en" ng-app="lowBarrel">
 <head>
     <meta charset="UTF-8">
     <title>Weather Chart</title>
@@ -11,7 +11,7 @@
         }
     </style>
 </head>
-<body ng-cloak>
+<body ng-cloak ng-controller="WeatherCtrl as weatherCtrl">
     <nav class="navbar navbar-inverse navbar-static-top">
         <div class="navbar-header">
             <a class="navbar-brand" href="/">Weather Chart</a>
@@ -23,5 +23,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
     <script src="js/app.js"></script>
     <script src="js/lowBarrel-directive.js"></script>
+    <script src="js/data-service.js"></script>
+    <script src="js/weather-controller.js"></script>
 </body>
 </html>
