@@ -7,17 +7,14 @@
         restrict: 'E',
         scope: {
           data: '=',
-          min: '=',
-          max: '=',
-          open: '=',
-          close: '='
+          metaData: '='
         },
         link: function (scope, element, attrs) {
-          var minAttr = scope.min;
-          var maxAttr = scope.max;
-          var openAttr = scope.open;
-          var closeAttr = scope.close;
-
+          var minAttr = scope.metaData.min;
+          var maxAttr = scope.metaData.max;
+          var openAttr = scope.metaData.open;
+          var closeAttr = scope.metaData.close;
+          
           var margin = { top: 20, right: 20, bottom: 20, left: 20 },
             width = 1800 - margin.left - margin.right,
             height = 200 - margin.top - margin.bottom;
@@ -26,7 +23,7 @@
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom);
 
-          var render = function (data) {
+          function render(data) {
             if (!data || data.length === 0) {
               return;
             }
@@ -49,7 +46,7 @@
             svg
               .datum(data)
               .call(chart);
-          };
+          }
 
           scope.$watch('data', function () {
             render(scope.data);

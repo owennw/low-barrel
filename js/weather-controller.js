@@ -5,31 +5,40 @@
     .controller('WeatherCtrl', ['weatherService', function (weatherService) {
       var self = this;
       self.data = [];
-      var stepSize = 4;
 
-      self.props = function () {
-        var min = 'minTemp';
-        var max = 'maxTemp';
-        var open = 'openTemp';
-        var close = 'closeTemp';
+      self.splitOptions = [1, 2, 4, 6, 8, 12];
+      self.stepSize = 4;
 
-        return {
-          min: min,
-          max: max,
-          open: open,
-          close: close
-        };
+      self.splitChanged = function () {
+        display();
       };
 
-      weatherService.getData().then(function (data) {
-        self.data = process(data);
-      });
+      self.typeOptions = ['Temperature', 'Humidity'];
+      self.dataTypeKey = 'Humidity';
 
-      var process = function (data) {
+      self.typeChanged = function () {
+        display();
+      };
+
+      self.metaData = {
+        min: 'min' + self.dataTypeKey,
+        max: 'max' + self.dataTypeKey,
+        open: 'open' + self.dataTypeKey,
+        close: 'close' + self.dataTypeKey
+      };
+
+      function display() {
+        self.data = [];
+        weatherService.getData().then(function (data) {
+          self.data = process(data);
+        });
+      }
+
+      function process(data) {
         var result = [];
 
-        for (var i = stepSize - 1, max = data.length; i < max; i += stepSize) {
-          var startIndex = i + 1 - stepSize;
+        for (var i = self.stepSize - 1, max = data.length; i < max; i += self.stepSize) {
+          var startIndex = i + 1 - self.stepSize;
 
           var temperatureData = fetchDataset(
             data, startIndex, function (d) { return d.temperature; });
@@ -38,22 +47,22 @@
 
           result.push({
             date: data[startIndex].date,
-            openTemp: temperatureData.open,
-            closeTemp: temperatureData.close,
-            minTemp: temperatureData.low,
-            maxTemp: temperatureData.high,
+            openTemperature: temperatureData.open,
+            closeTemperature: temperatureData.close,
+            minTemperature: temperatureData.low,
+            maxTemperature: temperatureData.high,
             openHumidity: humidityData.open,
             closeHumidity: humidityData.close,
-            minHumidity: humidityData.min,
-            maxHumidity: humidityData.max
+            minHumidity: humidityData.low,
+            maxHumidity: humidityData.high
           });
         }
 
         return result;
-      };
+      }
 
       function fetchDataset(data, startIndex, map) {
-        var endIndex = startIndex + stepSize - 1;
+        var endIndex = startIndex + self.stepSize - 1;
 
         var tempArray = data
           .slice(startIndex, endIndex + 1)
@@ -66,5 +75,7 @@
           low: Math.min.apply(Math, tempArray)
         };
       }
+
+      display();
     }]);
 }());

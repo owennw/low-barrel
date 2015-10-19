@@ -20,11 +20,33 @@
         </div>
     </nav>
 
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <form>
+                    <label for="dataView" style="font-weight: normal">View</label>
+                    <select id="dataView"
+                            ng-options="type for type in weatherCtrl.typeOptions"
+                            ng-model="weatherCtrl.dataTypeKey"
+                            ng-change="weatherCtrl.typeChanged()"></select>
+                    data
+                </form>
+            </div>
+            <div class="col-md-6">
+                <form class="pull-right">
+                    <label for="hourSplit" style="font-weight: normal">Split into blocks of</label>
+                    <select id="hourSplit"
+                            ng-options="split for split in weatherCtrl.splitOptions"
+                            ng-model="weatherCtrl.stepSize"
+                            ng-change="weatherCtrl.splitChanged()"></select>
+                    hours
+                </form>
+            </div>
+        </div>
+    </div>
+
     <weather-low-barrel data="weatherCtrl.data"
-                        open="weatherCtrl.props().open"
-                        close="weatherCtrl.props().close"
-                        min="weatherCtrl.props().min"
-                        max="weatherCtrl.props().max">
+                        meta-data="weatherCtrl.metaData">
     </weather-low-barrel>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
