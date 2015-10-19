@@ -13,25 +13,29 @@
             width = 1800 - margin.left - margin.right,
             height = 200 - margin.top - margin.bottom;
 
-          var chart = d3.select(element[0]).append('svg')
+          var svg = d3.select(element[0]).append('svg')
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom);
 
           var render = function (data) {
-            var graph = fc.chart.linearTimeSeries()
-              .xDomain(fc.util.extent(data, 'date'))
-              .yDomain(fc.util.extent(data, ['high', 'low']));
+            if (!data || data.length === 0) {
+              return;
+            }
 
             var gridlines = fc.annotation.gridline();
             var candlestick = fc.series.candlestick();
 
             var multi = fc.series.multi()
               .series([gridlines, candlestick]);
-            graph.plotArea(multi);
 
-            chart
+            var chart = fc.chart.linearTimeSeries()
+              .xDomain(fc.util.extent(data, 'date'))
+              .yDomain(fc.util.extent(data, ['high', 'low']))
+              .plotArea(multi);
+
+            svg
               .datum(data)
-              .call(graph);
+              .call(chart);
           };
 
           scope.$watch('data', function () {
