@@ -6,9 +6,18 @@
       return {
         restrict: 'E',
         scope: {
-          data: '='
+          data: '=',
+          min: '=',
+          max: '=',
+          open: '=',
+          close: '='
         },
         link: function (scope, element, attrs) {
+          var minAttr = scope.min;
+          var maxAttr = scope.max;
+          var openAttr = scope.open;
+          var closeAttr = scope.close;
+
           var margin = { top: 20, right: 20, bottom: 20, left: 20 },
             width = 1800 - margin.left - margin.right,
             height = 200 - margin.top - margin.bottom;
@@ -23,14 +32,18 @@
             }
 
             var gridlines = fc.annotation.gridline();
-            var candlestick = fc.series.candlestick();
+            var candlestick = fc.series.candlestick()
+              .yOpenValue(function (d) { return d[openAttr]; })
+              .yCloseValue(function (d) { return d[closeAttr]; })
+              .yHighValue(function (d) { return d[maxAttr]; })
+              .yLowValue(function (d) { return d[minAttr]; });
 
             var multi = fc.series.multi()
               .series([gridlines, candlestick]);
 
             var chart = fc.chart.linearTimeSeries()
               .xDomain(fc.util.extent(data, 'date'))
-              .yDomain(fc.util.extent(data, ['high', 'low']))
+              .yDomain(fc.util.extent(data, [maxAttr, minAttr]))
               .plotArea(multi);
 
             svg

@@ -20,7 +20,12 @@
         </div>
     </nav>
 
-    <weather-low-barrel data="weatherCtrl.data"></weather-low-barrel>
+    <weather-low-barrel data="weatherCtrl.data"
+                        open="weatherCtrl.props().open"
+                        close="weatherCtrl.props().close"
+                        min="weatherCtrl.props().min"
+                        max="weatherCtrl.props().max">
+    </weather-low-barrel>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3fc/1.5.0/d3fc.bundle.min.js"></script>
