@@ -1,8 +1,8 @@
 ﻿(function () {
   'use strict';
 
-  angular.module('lowBarrel.graph', [])
-    .directive('weatherLowBarrel', function () {
+  angular.module('lowBarrel.candlestick', [])
+    .directive('candlestick', function () {
       return {
         restrict: 'E',
         scope: {
@@ -10,14 +10,13 @@
           metaData: '='
         },
         link: function (scope, element, attrs) {
-         
-          var margin = { top: 20, right: 20, bottom: 20, left: 20 },
-            width = 1800 - margin.left - margin.right,
+          var margin = { top: 20, right: 20, bottom: 0, left: 20 },
+            width = 1850 - margin.left - margin.right,
             height = 200 - margin.top - margin.bottom;
 
           var svg = d3.select(element[0]).append('svg')
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom);
+            .attr("width", width)
+            .attr("height", height);
 
           function render(data) {
             if (!data || data.length === 0) {
