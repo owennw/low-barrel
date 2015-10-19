@@ -24,10 +24,8 @@
               return;
             }
 
-            function createMultiSeries(data, metaData, hasCrosshair) {
+            function createMultiSeries(data, metaData) {
               var items = [],
-                crosshairData = [],
-                crosshair,
                 minAttr = metaData.min,
                 maxAttr = metaData.max,
                 openAttr = metaData.open,
@@ -36,47 +34,59 @@
                 candlestick,
                 multi;
 
-                gridlines = fc.annotation.gridline();
-                items.push(gridlines);
+              gridlines = fc.annotation.gridline();
+              items.push(gridlines);
 
-                candlestick = fc.series.candlestick()
-                  .yOpenValue(function (d) { return d[openAttr]; })
-                  .yCloseValue(function (d) { return d[closeAttr]; })
-                  .yHighValue(function (d) { return d[maxAttr]; })
-                  .yLowValue(function (d) { return d[minAttr]; });
-                items.push(candlestick);
+              candlestick = fc.series.candlestick()
+                .yOpenValue(function (d) { return d[openAttr]; })
+                .yCloseValue(function (d) { return d[closeAttr]; })
+                .yHighValue(function (d) { return d[maxAttr]; })
+                .yLowValue(function (d) { return d[minAttr]; });
+              items.push(candlestick);
 
-              if (hasCrosshair) {
+              multi = fc.series.multi()
+                .series(items);
+
+              var addCrosshair = function () {
+                var crosshairData = [],
+                  crosshair;
+
                 crosshair = fc.tool.crosshair()
                   .snap(fc.util.seriesPointSnapXOnly(candlestick, data))
                   .xLabel('')
                   .yLabel('');
                 items.push(crosshair);
-              }
 
-              multi = fc.series.multi()
-                .series(items)
-                .mapping(function (series) {
-                  switch (series) {
-                    case crosshair:
-                      return crosshairData;
-                    default:
-                      return data;
-                  }
-                });
+                var series = multi.series();
+                multi
+                  .series(series.concat(crosshair))
+                  .mapping(function (series) {
+                    switch (series) {
+                      case crosshair:
+                        return crosshairData;
+                      default:
+                        return data;
+                    }
+                  });
+              };
 
               return {
                 multi: multi,
-                maxAttr: maxAttr,
-                minAttr: minAttr
+                high: maxAttr,
+                low: minAttr,
+                addCrosshair: addCrosshair
               };
             }
 
-            var multiSeries = createMultiSeries(data, scope.metaData, scope.crosshair);
+            var multiSeries = createMultiSeries(data, scope.metaData);
+
+            if (scope.crosshair) {
+              multiSeries.addCrosshair();
+            }
 
             var chart = fc.chart.linearTimeSeries()
               .xDomain(fc.util.extent(data, 'date'))
-              .yDomain(fc.util.extent(data, [multiSeries.maxAttr, multiSeries.minAttr]))
+              .yDomain(fc.util.extent(data, [multiSeries.high, multiSeries.low]))
               .plotArea(multiSeries.multi);
 
             svg
