@@ -7,7 +7,7 @@
       var dataCache = [];
       self.data = [];
 
-      self.splitOptions = [1, 2, 4, 6, 8, 12];
+      self.splitOptions = [2, 4, 6, 8, 12, 24];
       self.stepSize = 4;
 
       self.splitChanged = function () {
