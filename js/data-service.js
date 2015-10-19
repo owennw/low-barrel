@@ -2,22 +2,34 @@
   'use strict';
 
   angular.module('lowBarrel.service', [])
-    .factory('weatherService', ['$http', function ($http) {
+    .factory('weatherService', ['$http', '$q', function ($http, $q) {
 
       var dates = ['2015-10-09', '2015-10-10', '2015-10-11', '2015-10-12', '2015-10-13', '2015-10-14', '2015-10-15'];
 
-      function getData(callback) {
+      function getData() {
+        var promises = [];
+        var result = [];
         for (var i = 0, max = dates.length; i < max; i += 1) {
-          fetchData(dates[i], callback);
+          promises.push(fetchData(dates[i])
+            .then(function (d) {
+              result = result.concat(d);
+            }));
         }
+
+        return $q.all(promises)
+          .then(function () {
+            return result;
+          });
       }
 
-      function fetchData(date, callback) {
-        var results = [];
-        return d3.tsv('data/' + date + '.tsv', function (d) {
-          results = process(d, date);
-          callback(results);
-        });
+      function fetchData(date) {
+        return $http.get('data/' + date + '.tsv')
+          .then(function (d) {
+            return d3.tsv.parse(d.data);
+          })
+          .then(function (d) {
+            return process(d, date);
+          });
       }
 
       function process(data, date) {
