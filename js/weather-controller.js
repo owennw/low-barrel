@@ -4,6 +4,7 @@
   angular.module('lowBarrel.weatherController', [])
     .controller('WeatherCtrl', ['weatherService', function (weatherService) {
       var self = this;
+      var dataCache = [];
       self.data = [];
 
       self.splitOptions = [1, 2, 4, 6, 8, 12];
@@ -20,22 +21,48 @@
         display();
       };
 
-      self.metaData = {
-        min: 'min' + self.dataTypeKey,
-        max: 'max' + self.dataTypeKey,
-        open: 'open' + self.dataTypeKey,
-        close: 'close' + self.dataTypeKey
-      };
+      function metaData() {
+        return {
+          min: 'min' + self.dataTypeKey,
+          max: 'max' + self.dataTypeKey,
+          open: 'open' + self.dataTypeKey,
+          close: 'close' + self.dataTypeKey
+        };
+      }
 
       function display() {
         self.data = [];
-        weatherService.getData().then(function (data) {
-          self.data = process(data);
-        });
+        self.metaData = metaData();
+
+        // Must have the same code in both halves since without using the cache
+        // the request is asynchronous, but using the cache is synchronous.
+        if (!dataCache || dataCache.length === 0) {
+          weatherService.getData().then(function (data) {
+            dataCache = data;
+            self.data = process(dataCache);
+          });
+        } else {
+          self.data = process(dataCache);
+        }
       }
 
       function process(data) {
         var result = [];
+
+        function fetchDataset(data, startIndex, map) {
+          var endIndex = startIndex + self.stepSize - 1;
+
+          var tempArray = data
+            .slice(startIndex, endIndex + 1)
+            .map(map);
+
+          return {
+            open: map(data[startIndex]),
+            close: map(data[endIndex]),
+            high: Math.max.apply(Math, tempArray),
+            low: Math.min.apply(Math, tempArray)
+          };
+        }
 
         for (var i = self.stepSize - 1, max = data.length; i < max; i += self.stepSize) {
           var startIndex = i + 1 - self.stepSize;
@@ -59,21 +86,6 @@
         }
 
         return result;
-      }
-
-      function fetchDataset(data, startIndex, map) {
-        var endIndex = startIndex + self.stepSize - 1;
-
-        var tempArray = data
-          .slice(startIndex, endIndex + 1)
-          .map(map);
-
-        return {
-          open: map(data[startIndex]),
-          close: map(data[endIndex]),
-          high: Math.max.apply(Math, tempArray),
-          low: Math.min.apply(Math, tempArray)
-        };
       }
 
       display();
