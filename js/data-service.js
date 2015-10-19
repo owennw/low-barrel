@@ -4,18 +4,26 @@
   angular.module('lowBarrel.service', [])
     .factory('weatherService', ['$http', function ($http) {
 
-      function getData(callback) {
-        var results = [];
+      var dates = ['2015-10-09', '2015-10-10', '2015-10-11', '2015-10-12', '2015-10-13', '2015-10-14', '2015-10-15'];
 
-        d3.tsv('data/2015-10-14.tsv', function (d) {
-          process(d, '2015-10-14', results);
+      function getData(callback) {
+        for (var i = 0, max = dates.length; i < max; i += 1) {
+          fetchData(dates[i], callback);
+        }
+      }
+
+      function fetchData(date, callback) {
+        var results = [];
+        return d3.tsv('data/' + date + '.tsv', function (d) {
+          results = process(d, date);
           callback(results);
         });
       }
 
-      function process(data, date, results, callback) {
+      function process(data, date) {
         var stepSize = 6;
         var processed = [];
+        var results = [];
 
         for (var i = 0, max = data.length; i < max; i += 1) {
           processed.push({ time: data[i].Time, temp: +data[i].Temp });
