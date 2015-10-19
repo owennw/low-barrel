@@ -1,4 +1,4 @@
-﻿(function () {
+﻿(function (fc) {
   'use strict';
 
   angular.module('lowBarrel.candlestick', [])
@@ -7,7 +7,8 @@
         restrict: 'E',
         scope: {
           data: '=',
-          metaData: '='
+          metaData: '=',
+          crosshair: '='
         },
         link: function (scope, element, attrs) {
           var margin = { top: 20, right: 20, bottom: 0, left: 20 },
@@ -23,25 +24,60 @@
               return;
             }
 
-            var minAttr = scope.metaData.min;
-            var maxAttr = scope.metaData.max;
-            var openAttr = scope.metaData.open;
-            var closeAttr = scope.metaData.close;
+            function createMultiSeries(data, metaData, hasCrosshair) {
+              var items = [],
+                crosshairData = [],
+                crosshair,
+                minAttr = metaData.min,
+                maxAttr = metaData.max,
+                openAttr = metaData.open,
+                closeAttr = metaData.close,
+                gridlines,
+                candlestick,
+                multi;
 
-            var gridlines = fc.annotation.gridline();
-            var candlestick = fc.series.candlestick()
-              .yOpenValue(function (d) { return d[openAttr]; })
-              .yCloseValue(function (d) { return d[closeAttr]; })
-              .yHighValue(function (d) { return d[maxAttr]; })
-              .yLowValue(function (d) { return d[minAttr]; });
+                gridlines = fc.annotation.gridline();
+                items.push(gridlines);
 
-            var multi = fc.series.multi()
-              .series([gridlines, candlestick]);
+                candlestick = fc.series.candlestick()
+                  .yOpenValue(function (d) { return d[openAttr]; })
+                  .yCloseValue(function (d) { return d[closeAttr]; })
+                  .yHighValue(function (d) { return d[maxAttr]; })
+                  .yLowValue(function (d) { return d[minAttr]; });
+                items.push(candlestick);
+
+              if (hasCrosshair) {
+                crosshair = fc.tool.crosshair()
+                  .snap(fc.util.seriesPointSnapXOnly(candlestick, data))
+                  .xLabel('')
+                  .yLabel('');
+                items.push(crosshair);
+              }
+
+              multi = fc.series.multi()
+                .series(items)
+                .mapping(function (series) {
+                  switch (series) {
+                    case crosshair:
+                      return crosshairData;
+                    default:
+                      return data;
+                  }
+                });
+
+              return {
+                multi: multi,
+                maxAttr: maxAttr,
+                minAttr: minAttr
+              };
+            }
+
+            var multiSeries = createMultiSeries(data, scope.metaData, scope.crosshair);
 
             var chart = fc.chart.linearTimeSeries()
               .xDomain(fc.util.extent(data, 'date'))
-              .yDomain(fc.util.extent(data, [maxAttr, minAttr]))
-              .plotArea(multi);
+              .yDomain(fc.util.extent(data, [multiSeries.maxAttr, multiSeries.minAttr]))
+              .plotArea(multiSeries.multi);
 
             svg
               .datum(data)
@@ -58,4 +94,4 @@
         }
       };
     });
-}());
+}(fc));
