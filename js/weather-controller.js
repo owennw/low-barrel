@@ -14,8 +14,8 @@
         display();
       };
 
-      self.typeOptions = ['Temperature', 'Humidity'];
-      self.dataTypeKey = 'Humidity';
+      self.typeOptions = ['Temperature', 'Humidity', 'DewPoint', 'Pressure', 'WindSpeed'];
+      self.dataTypeKey = 'Temperature';
 
       self.typeChanged = function () {
         display();
@@ -71,6 +71,12 @@
             data, startIndex, function (d) { return d.temperature; });
           var humidityData = fetchDataset(
             data, startIndex, function (d) { return d.humidity; });
+          var dewPointData = fetchDataset(
+            data, startIndex, function (d) { return d.dewPoint; });
+          var pressureData = fetchDataset(
+            data, startIndex, function (d) { return d.pressure; });
+          var windSpeedData = fetchDataset(
+            data, startIndex, function (d) { return d.windSpeed; });
 
           result.push({
             date: data[startIndex].date,
@@ -81,7 +87,19 @@
             openHumidity: humidityData.open,
             closeHumidity: humidityData.close,
             minHumidity: humidityData.low,
-            maxHumidity: humidityData.high
+            maxHumidity: humidityData.high,
+            minDewPoint: dewPointData.low,
+            maxDewPoint: dewPointData.high,
+            openDewPoint: dewPointData.open,
+            closeDewPoint: dewPointData.close,
+            minPressure: pressureData.low,
+            maxPressure: pressureData.high,
+            openPressure: pressureData.open,
+            closePressure: pressureData.close,
+            minWindSpeed: windSpeedData.low,
+            maxWindSpeed: windSpeedData.high,
+            openWindSpeed: windSpeedData.open,
+            closeWindSpeed: windSpeedData.close
           });
         }
 
