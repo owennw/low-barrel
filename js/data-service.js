@@ -5,15 +5,17 @@
     .factory('weatherService', ['$http', function ($http) {
 
       function getData(callback) {
-        return d3.tsv('data/20151015.tsv', function (d) {
-            return process(d, new Date(2015, 10, 15), callback);
-          });
+        var results = [];
+
+        d3.tsv('data/2015-10-14.tsv', function (d) {
+          process(d, '2015-10-14', results);
+          callback(results);
+        });
       }
 
-      function process(data, date, callback) {
+      function process(data, date, results, callback) {
         var stepSize = 6;
         var processed = [];
-        var result = [];
 
         for (var i = 0, max = data.length; i < max; i += 1) {
           processed.push({ time: data[i].Time, temp: +data[i].Temp });
@@ -33,10 +35,9 @@
             var minTemp = Math.min.apply(Math, tempArray);
             var maxTemp = Math.max.apply(Math, tempArray);
 
-            result.push({
-              date: date,
-              startTime: startTime,
-              endTime: endTime,
+            results.push({
+              startDate: new Date(date + 'T' + startTime),
+              endDate: new Date(date + 'T' + endTime),
               startTemp: initialTemp,
               endTemp: exitTemp,
               min: minTemp,
@@ -45,7 +46,7 @@
           }
         }
 
-        callback(result);
+        return results;
       }
 
       return {
