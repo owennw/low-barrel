@@ -21,6 +21,8 @@
         display();
       };
 
+      self.volumeType = 'rainVolume';
+
       function metaData() {
         return {
           min: 'min' + self.dataTypeKey,
@@ -50,9 +52,10 @@
         // This function converts the raw weather data into specific formats 
         // suitable for the candlestick display
         var result = [];
+        var hourStepSize = self.stepSize * 2;
 
         function fetchDataset(data, startIndex, map) {
-          var endIndex = startIndex + self.stepSize - 1;
+          var endIndex = startIndex + hourStepSize - 1;
 
           var tempArray = data
             .slice(startIndex, endIndex + 1)
@@ -67,8 +70,8 @@
         }
 
         function fetchCumulativeDataset(data, startIndex, map) {
-          var firstIndex = startIndex === 0 ? 0 : startIndex - 1,
-            endIndex = startIndex + self.stepSize;
+          var firstIndex = data[startIndex].startOfDay === true ? startIndex : startIndex - 1,
+            endIndex = startIndex + hourStepSize - 1;
 
           // Bring the element before the start of this data slice to calculate
           // value per time interval, instead of cumulative
@@ -77,8 +80,8 @@
           };
         }
 
-        for (var i = self.stepSize - 1, max = data.length; i < max; i += self.stepSize) {
-          var startIndex = i + 1 - self.stepSize;
+        for (var i = hourStepSize - 1, max = data.length; i < max; i += hourStepSize) {
+          var startIndex = i + 1 - hourStepSize;
 
           var temperatureData = fetchDataset(
             data, startIndex, function (d) { return d.temperature; });

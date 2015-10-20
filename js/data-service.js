@@ -40,6 +40,7 @@
           // Use 'Z' to specify UTC time. This is incorrect for this data,
           // but produces a better chart.
           processed.push({
+            startOfDay: data[i].Time === '00:00',
             date: new Date(date + 'T' + data[i].Time + 'Z'),
             temperature: +data[i].Temp,
             humidity: +data[i].Humid,

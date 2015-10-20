@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('lowBarrel.candlestick', [])
-    .directive('candlestick', function () {
+    .directive('candlestickChart', function () {
       return {
         restrict: 'E',
         scope: {

@@ -1,3 +1,7 @@
-﻿candlestick {
+﻿candlestick-chart {
+  margin-left: 20px;
+}
+
+volume-chart {
   margin-left: 20px;
 }
