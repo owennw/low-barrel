@@ -26,10 +26,10 @@
 
             function createMultiSeries(data, metaData) {
               var items = [],
-                minAttr = metaData.min,
-                maxAttr = metaData.max,
-                openAttr = metaData.open,
-                closeAttr = metaData.close,
+                minAttr = metaData.min || 'low',
+                maxAttr = metaData.max || 'high',
+                openAttr = metaData.open || 'open',
+                closeAttr = metaData.close || 'close',
                 gridlines,
                 candlestick,
                 multi;

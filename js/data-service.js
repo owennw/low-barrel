@@ -44,8 +44,12 @@
             temperature: +data[i].Temp,
             humidity: +data[i].Humid,
             dewPoint: +data[i].DewPt,
+            avgWindSpeed: +data[i].WindSp,
             pressure: +data[i].Press,
-            windSpeed: +data[i].WindSp
+            windDirection: data[i].WindDr,
+            sun: +data[i].Sun,
+            rain: +data[i].Rain,
+            maxWindSpeed: +data[i].MxWSpd
           });
         }
 

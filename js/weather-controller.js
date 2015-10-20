@@ -14,7 +14,7 @@
         display();
       };
 
-      self.typeOptions = ['Temperature', 'Humidity', 'DewPoint', 'Pressure', 'WindSpeed'];
+      self.typeOptions = ['Temperature', 'Humidity', 'DewPoint', 'Pressure'];
       self.dataTypeKey = 'Temperature';
 
       self.typeChanged = function () {
@@ -47,6 +47,8 @@
       }
 
       function process(data) {
+        // This function converts the raw weather data into specific formats 
+        // suitable for the candlestick display
         var result = [];
 
         function fetchDataset(data, startIndex, map) {
@@ -64,6 +66,17 @@
           };
         }
 
+        function fetchCumulativeDataset(data, startIndex, map) {
+          var firstIndex = startIndex === 0 ? 0 : startIndex - 1,
+            endIndex = startIndex + self.stepSize;
+
+          // Bring the element before the start of this data slice to calculate
+          // value per time interval, instead of cumulative
+          return {
+            volume: map(data[endIndex]) - map(data[firstIndex])
+          };
+        }
+
         for (var i = self.stepSize - 1, max = data.length; i < max; i += self.stepSize) {
           var startIndex = i + 1 - self.stepSize;
 
@@ -75,8 +88,10 @@
             data, startIndex, function (d) { return d.dewPoint; });
           var pressureData = fetchDataset(
             data, startIndex, function (d) { return d.pressure; });
-          var windSpeedData = fetchDataset(
-            data, startIndex, function (d) { return d.windSpeed; });
+          var sunData = fetchCumulativeDataset(
+            data, startIndex, function (d) { return d.sun; });
+          var rainData = fetchCumulativeDataset(
+            data, startIndex, function (d) { return d.rain; });
 
           result.push({
             date: data[startIndex].date,
@@ -96,10 +111,8 @@
             maxPressure: pressureData.high,
             openPressure: pressureData.open,
             closePressure: pressureData.close,
-            minWindSpeed: windSpeedData.low,
-            maxWindSpeed: windSpeedData.high,
-            openWindSpeed: windSpeedData.open,
-            closeWindSpeed: windSpeedData.close
+            rainVolume: rainData.volume,
+            sunVolume: sunData.volume
           });
         }
 
