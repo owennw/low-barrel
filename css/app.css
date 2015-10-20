@@ -1,4 +1,9 @@
-﻿candlestick-chart {
+﻿h1 {
+  margin-left: 20px;
+  margin-bottom: 50px;
+}
+
+candlestick-chart {
   margin-left: 20px;
 }
 

@@ -2,60 +2,19 @@
   'use strict';
 
   angular.module('lowBarrel.weatherController', [])
-    .controller('WeatherCtrl', ['store', 'weatherService', function (store, weatherService) {
-      var self = this;
-      var dataCache = [];
+    .controller('WeatherCtrl', ['store', 'weatherService', function (store, dataService) {
+      var self = this,
+        myStore = myStore(),
+        dataCache;
+
       self.data = [];
       self.crosshairData = [];
-
-      // wraps the store object
-      function myStore() {
-        return {
-          get: function (name, defaultValue) {
-            return store.get(name) || defaultValue;
-          },
-          set: function (name, value) {
-            store.set(name, value);
-          }
-        }
-      }
-
-      var myStore = myStore();
-
       self.splitOptions = [2, 4, 6, 8, 12, 24];
       self.stepSize = myStore.get('stepSize', 4);
-
-      self.splitChanged = function () {
-        myStore.set('stepSize', self.stepSize);
-        display();
-      };
-
       self.continuousTypeOptions = ['Temperature', 'Humidity', 'DewPoint', 'Pressure'];
       self.continuousTypeKey = myStore.get('continuousTypeKey', 'Temperature');
-      self.continuousTypeChanged = function () {
-        myStore.set('continuousTypeKey', self.continuousTypeKey);
-        display();
-      };
-
       self.discreteTypeOptions = ['Rainfall', 'Sunlight'];
       self.discreteTypeKey = myStore.get('discreteTypeKey', 'Rainfall');
-      self.discreteTypeChanged = function () {
-        myStore.set('discreteTypeKey', self.discreteTypeKey);
-        display();
-      };
-
-      function discreteMetaData() {
-        return self.discreteTypeKey === 'Rainfall' ? 'rainVolume' : 'sunVolume';
-      }
-
-      function continuousMetaData() {
-        return {
-          min: 'min' + self.continuousTypeKey,
-          max: 'max' + self.continuousTypeKey,
-          open: 'open' + self.continuousTypeKey,
-          close: 'close' + self.continuousTypeKey
-        };
-      }
 
       function display() {
         self.data = [];
@@ -64,8 +23,8 @@
 
         // Must have the same code in both halves since without using the cache
         // the request is asynchronous, but using the cache is synchronous.
-        if (!dataCache || dataCache.length === 0) {
-          weatherService.getData().then(function (data) {
+        if (!dataCache) {
+          dataService.getData().then(function (data) {
             dataCache = data;
             self.data = process(dataCache);
           });
@@ -147,6 +106,46 @@
 
         return result;
       }
+
+      function continuousMetaData() {
+        return {
+          min: 'min' + self.continuousTypeKey,
+          max: 'max' + self.continuousTypeKey,
+          open: 'open' + self.continuousTypeKey,
+          close: 'close' + self.continuousTypeKey
+        };
+      }
+
+      function discreteMetaData() {
+        return self.discreteTypeKey === 'Rainfall' ? 'rainVolume' : 'sunVolume';
+      }
+
+      function myStore() {
+        // wraps the store object
+        return {
+          get: function (name, defaultValue) {
+            return store.get(name) || defaultValue;
+          },
+          set: function (name, value) {
+            store.set(name, value);
+          }
+        }
+      }
+
+      self.splitChanged = function () {
+        myStore.set('stepSize', self.stepSize);
+        display();
+      };
+
+      self.continuousTypeChanged = function () {
+        myStore.set('continuousTypeKey', self.continuousTypeKey);
+        display();
+      };
+
+      self.discreteTypeChanged = function () {
+        myStore.set('discreteTypeKey', self.discreteTypeKey);
+        display();
+      };
 
       display();
     }]);

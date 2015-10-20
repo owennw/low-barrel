@@ -7,9 +7,9 @@
   function addCrosshair(multi, seriesToAddCrosshair, data, crosshairData) {
     var crosshair = fc.tool.crosshair()
       .snap(fc.util.seriesPointSnapXOnly(seriesToAddCrosshair, data))
-      //.on('trackingstart.link', render)
-      //.on('trackingmove.link', render)
-      //.on('trackingend.link', render)
+      //.on('trackingstart.link', seriesHelper.render)
+      //.on('trackingmove.link', seriesHelper.render)
+      //.on('trackingend.link', seriesHelper.render)
       .xLabel('')
       .yLabel('');
 
