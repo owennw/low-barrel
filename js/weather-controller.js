@@ -12,16 +12,16 @@
       self.splitOptions = [2, 4, 6, 8, 12, 24];
       self.stepSize = myStore.get('stepSize', 4);
       self.continuousTypeOptions = ['Temperature', 'Humidity', 'DewPoint', 'Pressure'];
-      self.continuousTypeKey = myStore.get('continuousTypeKey', 'Temperature');
+      self.continuousTypeKey = myStore.get('continuousTypeKey', self.continuousTypeOptions[0]);
       self.discreteTypeOptions = ['Rainfall', 'Sunlight'];
-      self.discreteTypeKey = myStore.get('discreteTypeKey', 'Rainfall');
+      self.discreteTypeKey = myStore.get('discreteTypeKey', self.discreteTypeOptions[0]);
 
       function display() {
         self.data = [];
         self.continuousMetaData = continuousMetaData();
         self.discreteMetaData = discreteMetaData();
 
-        // Must have the same code in both halves since without using the cache
+        // Must have the process in both halves since without using the cache
         // the request is asynchronous, but using the cache is synchronous.
         if (!dataCache) {
           dataService.getData().then(function (data) {
@@ -35,35 +35,11 @@
 
       function process(data) {
         // This function converts the raw weather data into specific formats 
-        // suitable for the candlestick display
+        // suitable for the displays
         var result = [];
+
+        // The data is given in increments of 30 minutes
         var hourStepSize = self.stepSize * 2;
-
-        function fetchDataset(data, startIndex, map) {
-          var endIndex = startIndex + hourStepSize - 1;
-
-          var tempArray = data
-            .slice(startIndex, endIndex + 1)
-            .map(map);
-
-          return {
-            open: map(data[startIndex]),
-            close: map(data[endIndex]),
-            high: Math.max.apply(Math, tempArray),
-            low: Math.min.apply(Math, tempArray)
-          };
-        }
-
-        function fetchCumulativeDataset(data, startIndex, map) {
-          var firstIndex = data[startIndex].startOfDay === true ? startIndex : startIndex - 1,
-            endIndex = startIndex + hourStepSize - 1;
-
-          // Bring the element before the start of this data slice to calculate
-          // value per time interval, instead of cumulative
-          return {
-            volume: map(data[endIndex]) - map(data[firstIndex])
-          };
-        }
 
         for (var i = hourStepSize - 1, max = data.length; i < max; i += hourStepSize) {
           var startIndex = i + 1 - hourStepSize;
@@ -105,6 +81,32 @@
         }
 
         return result;
+
+        function fetchDataset(data, startIndex, map) {
+          var endIndex = startIndex + hourStepSize - 1;
+
+          var tempArray = data
+            .slice(startIndex, endIndex + 1)
+            .map(map);
+
+          return {
+            open: map(data[startIndex]),
+            close: map(data[endIndex]),
+            high: Math.max.apply(Math, tempArray),
+            low: Math.min.apply(Math, tempArray)
+          };
+        }
+
+        function fetchCumulativeDataset(data, startIndex, map) {
+          var firstIndex = data[startIndex].startOfDay === true ? startIndex : startIndex - 1,
+            endIndex = startIndex + hourStepSize - 1;
+
+          // Bring the element before the start of this data slice to calculate
+          // value per time interval, instead of cumulative
+          return {
+            volume: map(data[endIndex]) - map(data[firstIndex])
+          };
+        }
       }
 
       function continuousMetaData() {
