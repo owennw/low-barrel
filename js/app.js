@@ -3,6 +3,12 @@
 
   angular.module(
     'lowBarrel',
-    ['lowBarrel.service', 'lowBarrel.weatherController', 'lowBarrel.candlestick', 'lowBarrel.volume']);
+    [
+      'angular-storage',
+      'lowBarrel.service',
+      'lowBarrel.weatherController',
+      'lowBarrel.candlestick',
+      'lowBarrel.volume'
+    ]);
 
 }());

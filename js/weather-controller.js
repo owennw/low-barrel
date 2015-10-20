@@ -2,27 +2,44 @@
   'use strict';
 
   angular.module('lowBarrel.weatherController', [])
-    .controller('WeatherCtrl', ['weatherService', function (weatherService) {
+    .controller('WeatherCtrl', ['store', 'weatherService', function (store, weatherService) {
       var self = this;
       var dataCache = [];
       self.data = [];
 
+      // wraps the store object
+      function myStore() {
+        return {
+          get: function (name, defaultValue) {
+            return store.get(name) || defaultValue;
+          },
+          set: function (name, value) {
+            store.set(name, value);
+          }
+        }
+      }
+
+      var myStore = myStore();
+
       self.splitOptions = [2, 4, 6, 8, 12, 24];
-      self.stepSize = 4;
+      self.stepSize = myStore.get('stepSize', 4);
 
       self.splitChanged = function () {
+        myStore.set('stepSize', self.stepSize);
         display();
       };
 
       self.continuousTypeOptions = ['Temperature', 'Humidity', 'DewPoint', 'Pressure'];
-      self.continuousTypeKey = 'Temperature';
+      self.continuousTypeKey = myStore.get('continuousTypeKey', 'Temperature');
       self.continuousTypeChanged = function () {
+        myStore.set('continuousTypeKey', self.continuousTypeKey);
         display();
       };
 
       self.discreteTypeOptions = ['Rainfall', 'Sunlight'];
-      self.discreteTypeKey = 'Rainfall';
+      self.discreteTypeKey = myStore.get('discreteTypeKey', 'Rainfall');
       self.discreteTypeChanged = function () {
+        myStore.set('discreteTypeKey', self.discreteTypeKey);
         display();
       };
 
