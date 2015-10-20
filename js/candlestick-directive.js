@@ -63,6 +63,8 @@
 
             svg
               .datum(data)
+              .transition()
+              .duration(d3fcUtil.transitionDuration)
               .call(chart);
           }
 

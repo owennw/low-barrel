@@ -3,6 +3,8 @@
 (function () {
   'use strict';
 
+  d3fcUtil.transitionDuration = 500;
+
   d3fcUtil.addCrosshair = function (multi, seriesToAddCrosshair, data) {
     var crosshairData = [],
       crosshair;
