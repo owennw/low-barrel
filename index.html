@@ -50,12 +50,18 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <candlestick-chart data="weatherCtrl.data" meta-data="weatherCtrl.continuousMetaData" crosshair="true"></candlestick-chart>
+                <candlestick-chart data="weatherCtrl.data"
+                                   meta-data="weatherCtrl.continuousMetaData"
+                                   crosshair="true">
+                </candlestick-chart>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <volume-chart data="weatherCtrl.data" volume-type="weatherCtrl.discreteMetaData" crosshair="true"></volume-chart>
+                <volume-chart data="weatherCtrl.data"
+                              volume-type="weatherCtrl.discreteMetaData"
+                              crosshair="true">
+                </volume-chart>
             </div>
         </div>
     </div>
@@ -68,6 +74,6 @@
     <script src="js/volume-directive.js"></script>
     <script src="js/data-service.js"></script>
     <script src="js/weather-controller.js"></script>
-    <script src="js/util.js"></script>
+    <script src="js/series-helper.js"></script>
 </body>
 </html>
