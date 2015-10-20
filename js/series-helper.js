@@ -4,8 +4,7 @@
   'use strict';
   var transitionDuration = 500;
 
-  function addCrosshair(multi, seriesToAddCrosshair, data) {
-    var crosshairData = [];
+  function addCrosshair(multi, seriesToAddCrosshair, data, crosshairData) {
     var crosshair = fc.tool.crosshair()
       .snap(fc.util.seriesPointSnapXOnly(seriesToAddCrosshair, data))
       //.on('trackingstart.link', render)
@@ -27,15 +26,15 @@
       });
   }
 
-  seriesHelper.render = function (svg, data, createMultiSeries, hasCrosshair) {
+  seriesHelper.render = function (svg, data, createMultiSeries, crosshairData) {
     if (!data || data.length === 0) {
       return;
     }
 
     var multiSeries = createMultiSeries();
 
-    if (hasCrosshair) {
-      addCrosshair(multiSeries.multi, multiSeries.crosshairSeries, data);
+    if (crosshairData) {
+      addCrosshair(multiSeries.multi, multiSeries.crosshairSeries, data, crosshairData);
     }
 
     var chart = fc.chart.linearTimeSeries()

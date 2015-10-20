@@ -8,7 +8,7 @@
         scope: {
           data: '=',
           volumeType: '=',
-          crosshair: '='
+          crosshairData: '='
         },
         link: function (scope, element, attrs) {
           var svg = d3.select(element[0]).append('svg')
@@ -40,7 +40,7 @@
               svg,
               scope.data,
               function () { return createMultiSeries(); },
-              scope.crosshair);
+              scope.crosshairData);
           }
 
           scope.$watch('data', renderHelper, true);

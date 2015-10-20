@@ -6,6 +6,7 @@
       var self = this;
       var dataCache = [];
       self.data = [];
+      self.crosshairData = [];
 
       // wraps the store object
       function myStore() {
