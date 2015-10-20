@@ -42,34 +42,11 @@
               multi = fc.series.multi()
                 .series(items);
 
-              var addCrosshair = function (series) {
-                var crosshairData = [],
-                  crosshair;
-
-                crosshair = fc.tool.crosshair()
-                  .snap(fc.util.seriesPointSnapXOnly(series, data))
-                  .xLabel('')
-                  .yLabel('');
-                items.push(crosshair);
-
-                var existingSeries = multi.series();
-                multi
-                  .series(existingSeries.concat(crosshair))
-                  .mapping(function (mapSeries) {
-                    switch (mapSeries) {
-                      case crosshair:
-                        return crosshairData;
-                      default:
-                        return data;
-                    }
-                  });
-              };
-
               return {
                 multi: multi,
                 high: maxAttr,
                 low: minAttr,
-                addCrosshair: function () { return addCrosshair(candlestick); }
+                addCrosshair: function () { return d3fcUtil.addCrosshair(multi, candlestick, data); }
               };
             }
 

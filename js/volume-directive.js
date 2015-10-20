@@ -35,32 +35,9 @@
               multi = fc.series.multi()
                 .series(items);
 
-              var addCrosshair = function (series) {
-                var crosshairData = [],
-                  crosshair;
-
-                crosshair = fc.tool.crosshair()
-                  .snap(fc.util.seriesPointSnapXOnly(series, data))
-                  .xLabel('')
-                  .yLabel('');
-                items.push(crosshair);
-
-                var existingSeries = multi.series();
-                multi
-                  .series(existingSeries.concat(crosshair))
-                  .mapping(function (mapSeries) {
-                    switch (mapSeries) {
-                      case crosshair:
-                        return crosshairData;
-                      default:
-                        return data;
-                    }
-                  });
-              };
-
               return {
                 multi: multi,
-                addCrosshair: function () { return addCrosshair(bar); }
+                addCrosshair: function () { return d3fcUtil.addCrosshair(multi, bar, data); }
               };
             }
 
