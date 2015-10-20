@@ -11,13 +11,8 @@
           crosshair: '='
         },
         link: function (scope, element, attrs) {
-          var margin = { top: 20, right: 20, bottom: 0, left: 20 },
-            width = 1850 - margin.left - margin.right,
-            height = 200 - margin.top - margin.bottom;
-
           var svg = d3.select(element[0]).append('svg')
-            .attr("width", width)
-            .attr("height", height);
+            .style('width', '99%');
 
           function render(data) {
             if (!data || data.length === 0) {
@@ -47,21 +42,21 @@
               multi = fc.series.multi()
                 .series(items);
 
-              var addCrosshair = function () {
+              var addCrosshair = function (series) {
                 var crosshairData = [],
                   crosshair;
 
                 crosshair = fc.tool.crosshair()
-                  .snap(fc.util.seriesPointSnapXOnly(candlestick, data))
+                  .snap(fc.util.seriesPointSnapXOnly(series, data))
                   .xLabel('')
                   .yLabel('');
                 items.push(crosshair);
 
-                var series = multi.series();
+                var existingSeries = multi.series();
                 multi
-                  .series(series.concat(crosshair))
-                  .mapping(function (series) {
-                    switch (series) {
+                  .series(existingSeries.concat(crosshair))
+                  .mapping(function (mapSeries) {
+                    switch (mapSeries) {
                       case crosshair:
                         return crosshairData;
                       default:
@@ -74,7 +69,7 @@
                 multi: multi,
                 high: maxAttr,
                 low: minAttr,
-                addCrosshair: addCrosshair
+                addCrosshair: function () { return addCrosshair(candlestick); }
               };
             }
 

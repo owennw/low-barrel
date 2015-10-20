@@ -22,7 +22,7 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-xs-6">
                 <form>
                     <label for="dataView" style="font-weight: normal">View</label>
                     <select id="dataView"
@@ -32,7 +32,7 @@
                     data
                 </form>
             </div>
-            <div class="col-md-6">
+            <div class="col-xs-6">
                 <form class="pull-right">
                     <label for="hourSplit" style="font-weight: normal">Split into blocks of</label>
                     <select id="hourSplit"
@@ -43,10 +43,17 @@
                 </form>
             </div>
         </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <candlestick-chart data="weatherCtrl.data" meta-data="weatherCtrl.metaData" crosshair="true"></candlestick-chart>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <volume-chart data="weatherCtrl.data" volume-type="weatherCtrl.volumeType" crosshair="true"></volume-chart>
+            </div>
+        </div>
     </div>
-
-    <candlestick-chart data="weatherCtrl.data" meta-data="weatherCtrl.metaData" crosshair="true"></candlestick-chart>
-    <volume-chart data="weatherCtrl.data" volume-type="weatherCtrl.volumeType"></volume-chart>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3fc/1.5.0/d3fc.bundle.min.js"></script>
