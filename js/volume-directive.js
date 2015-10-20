@@ -60,6 +60,10 @@
           scope.$watch('data', function () {
             render(scope.data);
           }, true);
+
+          scope.$watch('volumeType', function () {
+            render(scope.data);
+          }, true);
         }
       };
     });

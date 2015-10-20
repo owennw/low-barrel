@@ -24,11 +24,16 @@
         <div class="row">
             <div class="col-xs-6">
                 <form>
-                    <label for="dataView" style="font-weight: normal">View</label>
-                    <select id="dataView"
-                            ng-options="type for type in weatherCtrl.typeOptions"
-                            ng-model="weatherCtrl.dataTypeKey"
-                            ng-change="weatherCtrl.typeChanged()"></select>
+                    <label for="continuousDataView" style="font-weight: normal">View</label>
+                    <select id="continuousDataView"
+                            ng-options="type for type in weatherCtrl.continuousTypeOptions"
+                            ng-model="weatherCtrl.continuousTypeKey"
+                            ng-change="weatherCtrl.continuousTypeChanged()"></select>
+                    <label for="discreteDataView" style="font-weight: normal">and</label>
+                    <select id="discreteDataView"
+                            ng-options="type for type in weatherCtrl.discreteTypeOptions"
+                            ng-model="weatherCtrl.discreteTypeKey"
+                            ng-change="weatherCtrl.discreteTypeChanged()"></select>
                     data
                 </form>
             </div>
@@ -45,12 +50,12 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <candlestick-chart data="weatherCtrl.data" meta-data="weatherCtrl.metaData" crosshair="true"></candlestick-chart>
+                <candlestick-chart data="weatherCtrl.data" meta-data="weatherCtrl.continuousMetaData" crosshair="true"></candlestick-chart>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <volume-chart data="weatherCtrl.data" volume-type="weatherCtrl.volumeType" crosshair="true"></volume-chart>
+                <volume-chart data="weatherCtrl.data" volume-type="weatherCtrl.discreteMetaData" crosshair="true"></volume-chart>
             </div>
         </div>
     </div>

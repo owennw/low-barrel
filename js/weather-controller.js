@@ -14,27 +14,35 @@
         display();
       };
 
-      self.typeOptions = ['Temperature', 'Humidity', 'DewPoint', 'Pressure'];
-      self.dataTypeKey = 'Temperature';
-
-      self.typeChanged = function () {
+      self.continuousTypeOptions = ['Temperature', 'Humidity', 'DewPoint', 'Pressure'];
+      self.continuousTypeKey = 'Temperature';
+      self.continuousTypeChanged = function () {
         display();
       };
 
-      self.volumeType = 'rainVolume';
+      self.discreteTypeOptions = ['Rainfall', 'Sunlight'];
+      self.discreteTypeKey = 'Rainfall';
+      self.discreteTypeChanged = function () {
+        display();
+      };
 
-      function metaData() {
+      function discreteMetaData() {
+        return self.discreteTypeKey === 'Rainfall' ? 'rainVolume' : 'sunVolume';
+      }
+
+      function continuousMetaData() {
         return {
-          min: 'min' + self.dataTypeKey,
-          max: 'max' + self.dataTypeKey,
-          open: 'open' + self.dataTypeKey,
-          close: 'close' + self.dataTypeKey
+          min: 'min' + self.continuousTypeKey,
+          max: 'max' + self.continuousTypeKey,
+          open: 'open' + self.continuousTypeKey,
+          close: 'close' + self.continuousTypeKey
         };
       }
 
       function display() {
         self.data = [];
-        self.metaData = metaData();
+        self.continuousMetaData = continuousMetaData();
+        self.discreteMetaData = discreteMetaData();
 
         // Must have the same code in both halves since without using the cache
         // the request is asynchronous, but using the cache is synchronous.
