@@ -11,6 +11,8 @@
           crosshairData: '='
         },
         link: function (scope, element, attrs) {
+          var legendItemsAdded = false;
+
           var svg = d3.select(element[0]).append('svg')
             .style('width', '100%');
 
@@ -35,8 +37,20 @@
               .series([gridlines, candlestick]);
 
             if (scope.crosshairData) {
+              if (!legendItemsAdded) {
+                seriesHelper.addLegendItems(
+                [
+                 ['Date:', function (d) { return seriesHelper.format('date', d.date); }],
+                 ['Open:', function (d) { return d[openAttr]; }],
+                 ['Close:', function (d) { return d[closeAttr]; }],
+                 ['Low:', function (d) { return d[minAttr]; }],
+                 ['High:', function (d) { return d[maxAttr]; }],
+                ]);
+                legendItemsAdded = true;
+              }
+
               var crosshair = fc.tool.crosshair()
-                .decorate(seriesHelper.legend(scope.data, scope.metaData))
+                .decorate(seriesHelper.legend())
                 .snap(fc.util.seriesPointSnapXOnly(candlestick, scope.data))
                 .on('trackingstart.link', seriesHelper.render)
                 .on('trackingmove.link', seriesHelper.render)

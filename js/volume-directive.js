@@ -11,6 +11,8 @@
           crosshairData: '='
         },
         link: function (scope, element, attrs) {
+          var legendItemsAdded = false;
+
           var svg = d3.select(element[0]).append('svg')
             .style('width', '100%');
 
@@ -28,7 +30,15 @@
               .series([gridlines, bar]);
 
             if (scope.crosshairData) {
+              if (!legendItemsAdded) {
+                seriesHelper.addLegendItems([
+                  ['Volume:', function (d) { return d[scope.volumeType] }]
+                ]);
+                legendItemsAdded = true;
+              }
+
               var crosshair = fc.tool.crosshair()
+                .decorate(seriesHelper.legend())
                 .snap(fc.util.seriesPointSnapXOnly(bar, scope.data))
                 .on('trackingstart.link', seriesHelper.render)
                 .on('trackingmove.link', seriesHelper.render)

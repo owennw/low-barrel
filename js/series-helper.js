@@ -3,6 +3,7 @@
 (function () {
   'use strict';
   var components = [];
+  var legendItems = [];
 
   seriesHelper.register = function (createMultiSeries) {
     components.push(createMultiSeries);
@@ -29,25 +30,21 @@
     })
   }
 
-  seriesHelper.legend = function(data, metadata) {
+  seriesHelper.format = function (type, value) {
     var formatters = {
       date: d3.time.format('%a %d %b %Y, %H:%M')
     };
 
-    function format(type, value) {
-      return formatters[type](value);
-    }
+    return formatters[type](value);
+  };
 
-    var items = [
-     ['Date:', function (d) { return format('date', d.date); }],
-     ['Open:', function (d) { return d[metadata.open || 'open']; }],
-     ['Close:', function (d) { return d[metadata.close || 'close']; }],
-     ['Low:', function (d) { return d[metadata.min || 'low']; }],
-     ['High:', function (d) { return d[metadata.max || 'high']; }]
-    ];
+  seriesHelper.addLegendItems = function (items) {
+    legendItems = legendItems.concat(items);
+  }
 
+  seriesHelper.legend = function () {
     var legend = fc.chart.legend()
-      .items(items);
+      .items(legendItems);
 
     return function (selection) {
       var datum;
