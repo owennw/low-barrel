@@ -25,14 +25,14 @@
       multiSeries.svg
         .datum(data)
         .transition()
-        .duration(400)
         .call(chart);
     })
   }
 
   seriesHelper.format = function (type, value) {
     var formatters = {
-      date: d3.time.format('%a %d %b %Y, %H:%M')
+      date: d3.time.format('%a %d %b %Y, %H:%M'),
+      number: d3.format('.2f')
     };
 
     return formatters[type](value);

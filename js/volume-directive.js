@@ -32,7 +32,7 @@
             if (scope.crosshairData) {
               if (!legendItemsAdded) {
                 seriesHelper.addLegendItems([
-                  ['Volume:', function (d) { return d[scope.volumeType] }]
+                  ['Volume:', function (d) { return seriesHelper.format('number', d[scope.volumeType]) }]
                 ]);
                 legendItemsAdded = true;
               }

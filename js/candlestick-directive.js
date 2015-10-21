@@ -41,10 +41,10 @@
                 seriesHelper.addLegendItems(
                 [
                  ['Date:', function (d) { return seriesHelper.format('date', d.date); }],
-                 ['Open:', function (d) { return d[openAttr]; }],
-                 ['Close:', function (d) { return d[closeAttr]; }],
-                 ['Low:', function (d) { return d[minAttr]; }],
-                 ['High:', function (d) { return d[maxAttr]; }],
+                 ['Open:', function (d) { return seriesHelper.format('number', d[openAttr]); }],
+                 ['Close:', function (d) { return seriesHelper.format('number', d[closeAttr]); }],
+                 ['Low:', function (d) { return seriesHelper.format('number', d[minAttr]); }],
+                 ['High:', function (d) { return seriesHelper.format('number', d[maxAttr]); }],
                 ]);
                 legendItemsAdded = true;
               }
