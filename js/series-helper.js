@@ -28,4 +28,31 @@
         .call(chart);
     })
   }
+
+  seriesHelper.legend = function(data, metadata) {
+    var formatters = {
+      date: d3.time.format('%a %d %b %Y, %H:%M')
+    };
+
+    function format(type, value) {
+      return formatters[type](value);
+    }
+
+    var items = [
+     ['Date:', function (d) { return format('date', d.date); }],
+     ['Open:', function (d) { return d[metadata.open || 'open']; }],
+     ['Close:', function (d) { return d[metadata.close || 'close']; }],
+     ['Low:', function (d) { return d[metadata.min || 'low']; }],
+     ['High:', function (d) { return d[metadata.max || 'high']; }]
+    ];
+
+    var legend = fc.chart.legend()
+      .items(items);
+
+    return function (selection) {
+      d3.select('#legend')
+        .data(data)
+        .call(legend);
+    }
+  }
 }());

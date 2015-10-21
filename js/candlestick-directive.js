@@ -36,7 +36,7 @@
 
             if (scope.crosshairData) {
               var crosshair = fc.tool.crosshair()
-                .decorate(legend())
+                .decorate(seriesHelper.legend(scope.data, scope.metaData))
                 .snap(fc.util.seriesPointSnapXOnly(candlestick, scope.data))
                 .on('trackingstart.link', seriesHelper.render)
                 .on('trackingmove.link', seriesHelper.render)
@@ -65,33 +65,6 @@
               svg: svg,
               metaData: scope.metaData
             };
-          }
-
-          function legend() {
-            var formatters = {
-              date: d3.time.format('%a %d %b %Y, %H:%M')
-            };
-
-            function format(type, value) {
-              return formatters[type](value);
-            }
-
-            var items = [
-             ['Date:', function (d) { return format('date', d.date); }],
-             ['Open:', function (d) { return d[scope.metaData.open || 'open']; }],
-             ['Close:', function (d) { return d[scope.metaData.close || 'close']; }],
-             ['Low:', function (d) { return d[scope.metaData.min || 'low']; }],
-             ['High:', function (d) { return d[scope.metaData.max || 'high']; }]
-            ];
-
-            var legend = fc.chart.legend()
-              .items(items);
-
-            return function (selection) {
-              d3.select('#legend')
-                .data(scope.data)
-                .call(legend);
-            }
           }
 
           seriesHelper.register(createMultiSeries);

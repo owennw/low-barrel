@@ -26,16 +26,16 @@
         <div class="row">
             <div class="col-xs-6">
                 <form>
-                    <label for="continuousDataView" style="font-weight: normal">View</label>
-                    <select id="continuousDataView"
-                            ng-options="type for type in weatherCtrl.continuousTypeOptions"
-                            ng-model="weatherCtrl.continuousTypeKey"
-                            ng-change="weatherCtrl.continuousTypeChanged()"></select>
-                    <label for="discreteDataView" style="font-weight: normal">and</label>
+                    <label for="discreteDataView" style="font-weight: normal">View</label>
                     <select id="discreteDataView"
                             ng-options="type for type in weatherCtrl.discreteTypeOptions"
                             ng-model="weatherCtrl.discreteTypeKey"
                             ng-change="weatherCtrl.discreteTypeChanged()"></select>
+                    <label for="continuousDataView" style="font-weight: normal">and</label>
+                    <select id="continuousDataView"
+                            ng-options="type for type in weatherCtrl.continuousTypeOptions"
+                            ng-model="weatherCtrl.continuousTypeKey"
+                            ng-change="weatherCtrl.continuousTypeChanged()"></select>
                     data
                 </form>
             </div>
