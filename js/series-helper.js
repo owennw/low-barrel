@@ -2,50 +2,30 @@
 
 (function () {
   'use strict';
-  var transitionDuration = 500;
+  var components = [];
 
-  function addCrosshair(multi, seriesToAddCrosshair, data, crosshairData) {
-    var crosshair = fc.tool.crosshair()
-      .snap(fc.util.seriesPointSnapXOnly(seriesToAddCrosshair, data))
-      //.on('trackingstart.link', seriesHelper.render)
-      //.on('trackingmove.link', seriesHelper.render)
-      //.on('trackingend.link', seriesHelper.render)
-      .xLabel('')
-      .yLabel('');
+  seriesHelper.register = function (createMultiSeries) {
+    components.push(createMultiSeries);
+  };
 
-    var existingSeries = multi.series();
-    multi
-      .series(existingSeries.concat(crosshair))
-      .mapping(function (mapSeries) {
-        switch (mapSeries) {
-          case crosshair:
-            return crosshairData;
-          default:
-            return data;
-        }
-      });
-  }
+  seriesHelper.render = function () {
+    components.forEach(function (createMultiSeries) {
+      var multiSeries = createMultiSeries();
+      var data = multiSeries.data;
+      if (!data || data.length === 0) {
+        return;
+      }
 
-  seriesHelper.render = function (svg, data, createMultiSeries, crosshairData) {
-    if (!data || data.length === 0) {
-      return;
-    }
+      var chart = fc.chart.linearTimeSeries()
+        .xDomain(fc.util.extent(data, multiSeries.xDomain))
+        .yDomain(fc.util.extent(data, multiSeries.yDomain))
+        .plotArea(multiSeries.multi);
 
-    var multiSeries = createMultiSeries();
-
-    if (crosshairData) {
-      addCrosshair(multiSeries.multi, multiSeries.crosshairSeries, data, crosshairData);
-    }
-
-    var chart = fc.chart.linearTimeSeries()
-      .xDomain(fc.util.extent(data, multiSeries.xDomain))
-      .yDomain(fc.util.extent(data, multiSeries.yDomain))
-      .plotArea(multiSeries.multi);
-
-    svg
-      .datum(data)
-      .transition()
-      .duration(transitionDuration)
-      .call(chart);
+      multiSeries.svg
+        .datum(data)
+        .transition()
+        .duration(400)
+        .call(chart);
+    })
   }
 }());

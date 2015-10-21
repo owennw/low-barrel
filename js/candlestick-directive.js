@@ -34,24 +34,40 @@
             multi = fc.series.multi()
               .series([gridlines, candlestick]);
 
+            if (scope.crosshairData) {
+              var crosshair = fc.tool.crosshair()
+                .snap(fc.util.seriesPointSnapXOnly(candlestick, scope.data))
+                .on('trackingstart.link', seriesHelper.render)
+                .on('trackingmove.link', seriesHelper.render)
+                .on('trackingend.link', seriesHelper.render)
+                .xLabel('')
+                .yLabel('');
+
+              var existingSeries = multi.series();
+              multi
+                .series(existingSeries.concat(crosshair))
+                .mapping(function (mapSeries) {
+                  switch (mapSeries) {
+                    case crosshair:
+                      return scope.crosshairData;
+                    default:
+                      return scope.data;
+                  }
+                });
+            }
+
             return {
               multi: multi,
               xDomain: 'date',
               yDomain: [maxAttr, minAttr],
-              crosshairSeries: candlestick
+              data: scope.data,
+              svg: svg
             };
           }
 
-          function renderHelper() {
-            return seriesHelper.render(
-              svg,
-              scope.data,
-              function () { return createMultiSeries(); },
-              scope.crosshairData);
-          }
-
-          scope.$watch('data', renderHelper, true);
-          scope.$watch('metaData', renderHelper, true);
+          scope.$watch('data', seriesHelper.render, true);
+          scope.$watch('metaData', seriesHelper.render, true);
+          seriesHelper.register(createMultiSeries);
         }
       };
     });
