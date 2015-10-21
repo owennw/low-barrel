@@ -50,9 +50,16 @@
       .items(items);
 
     return function (selection) {
-      d3.select('#legend')
-        .data(data)
-        .call(legend);
+      var datum;
+
+      try {
+        datum = selection.datum().datum;
+        d3.select('#legend')
+          .data([datum])
+          .call(legend);
+      } catch (err) {
+        // Do nothing
+      }
     }
   }
 }());
