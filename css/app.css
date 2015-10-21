@@ -1,12 +1,8 @@
-﻿h1 {
+﻿body {
+  background-color: rgba(246, 242, 205, 0.17);
+}
+
+h1 {
   margin-left: 20px;
   margin-bottom: 50px;
-}
-
-candlestick-chart {
-  margin-left: 20px;
-}
-
-volume-chart {
-  margin-left: 20px;
 }

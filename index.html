@@ -52,6 +52,14 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
+                <volume-chart data="weatherCtrl.data"
+                              volume-type="weatherCtrl.discreteMetaData"
+                              crosshair-data="weatherCtrl.crosshairData">
+                </volume-chart>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
                 <candlestick-chart data="weatherCtrl.data"
                                    meta-data="weatherCtrl.continuousMetaData"
                                    crosshair-data="weatherCtrl.crosshairData">
@@ -59,11 +67,8 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-12">
-                <volume-chart data="weatherCtrl.data"
-                              volume-type="weatherCtrl.discreteMetaData"
-                              crosshair-data="weatherCtrl.crosshairData">
-                </volume-chart>
+            <div class="col-xs-4">
+                <div id="legend"></div>
             </div>
         </div>
     </div>

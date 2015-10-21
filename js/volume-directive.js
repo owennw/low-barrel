@@ -12,7 +12,7 @@
         },
         link: function (scope, element, attrs) {
           var svg = d3.select(element[0]).append('svg')
-            .style('width', '99%');
+            .style('width', '100%');
 
           function createMultiSeries() {
             var bar,
@@ -58,9 +58,9 @@
             };
           }
 
+          seriesHelper.register(createMultiSeries);
           scope.$watch('data', seriesHelper.render, true);
           scope.$watch('volumeType', seriesHelper.render, true);
-          seriesHelper.register(createMultiSeries);
         }
       };
     });
